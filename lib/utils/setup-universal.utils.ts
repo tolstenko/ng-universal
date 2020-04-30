@@ -41,9 +41,11 @@ export function setupUniversal(app: any, ngOptions: AngularUniversalOptions) {
   app.get(
     ngOptions.rootStaticPath,
     express.static(ngOptions.viewsPath, {
-      maxAge: 600
+      maxAge: 31536000 // cache static files for 1 year
     })
   );
+
+
 }
 
 export function getCacheOptions(ngOptions: AngularUniversalOptions) {

@@ -50,12 +50,18 @@ export class AngularUniversalModule implements OnModuleInit {
       return;
     }
     const app = httpAdapter.getInstance();
-    app.get(this.ngOptions.renderPath, (req, res) =>
-      res.render(this.ngOptions.templatePath, {
-        req,
-        res,
-        providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }]
-      })
+    app.get(this.ngOptions.renderPath, (req, res) => {
+        var ret = res.render(this.ngOptions.templatePath, {
+          req,
+          res,
+          providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }]
+        });
+        if(req.url.endsWith(".js"))
+          res.append("cache-control", "public, max-age=900"); // cache js such as vendor.js and styles.js for 15m
+        else
+          res.append("cache-control", "public, max-age=60"); // cache html response for 1m
+        return ret;
+      }
     );
   }
 }
